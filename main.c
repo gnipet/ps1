@@ -46,6 +46,23 @@ int main() {
     printf("\n%s", chaos_decrypted);
     free(chaos_decrypted);
     free(chaos_encrypted);
+    printf("\n");
+
+    //Test dešifrovania
+    printf("\nSpúšťam BMP_encrypt:   ");
+    unsigned char* bmp_encrypted = bmp_encrypt("CoMPuTeR", "Hello world!");
+    for(int i=0; i < 12;i++) {
+        printf("%x ", bmp_encrypted[i]); //Prirodzené hexadecimálne číslo 
+    }
+    printf("\n");
+
+    // Test dešifrovania
+    printf("\nSpúšťam BMP_decrypt:  ");
+    char* bmp_decrypted = bmp_decrypt("CoMPuTeR", bmp_encrypted);
+    printf("%s\n", bmp_decrypted);
+    free(bmp_decrypted);
+    free(bmp_encrypted);
+
 
 
     printf("\n\n");

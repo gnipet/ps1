@@ -1,8 +1,8 @@
 TARGET = main 
 LIBS = -lm
 CC = gcc
-CFLAGS = -g -Wall
-
+#CFLAGS = -g -Wall
+CFLAGS = -std=c11 -Werror -Wall -lm
 .PHONY: default all clean
 
 default: $(TARGET)

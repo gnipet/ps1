@@ -35,6 +35,14 @@ char* reverse(const char* text) {
 char* vigenere_encrypt(const char* key, const char* text) {
     if (key == NULL || text == NULL) return NULL;
 
+    
+    // Kontrola, či key obsahuje len znaky abecedy
+    for (int i = 0; key[i] != '\0'; i++) {
+        if (!isalpha(key[i])) {  // Ak znak nie je písmeno abecedy
+            return NULL;  // Vráti NULL, ak kľúč nie je platný
+        }
+    }
+    
     int key_len = strlen(key);
     int text_len = strlen(text);
     char* encrypted_text = (char*)malloc((text_len + 1) * sizeof(char)); //Alokujeme miesto pre šifrovaný reťazec + 1 to je ukončenie
@@ -66,6 +74,13 @@ char* vigenere_encrypt(const char* key, const char* text) {
 // Funkcia na dešifrovanie textu pomocou Vigenèrovej šifry
 char* vigenere_decrypt(const char* key, const char* text) {
     if (key == NULL || text == NULL) return NULL;
+
+    // Kontrola, či key obsahuje len znaky abecedy
+    for (int i = 0; key[i] != '\0'; i++) {
+        if (!isalpha(key[i])) {  // Ak znak nie je písmeno abecedy
+            return NULL;  // Vráti NULL, ak kľúč nie je platný
+        }
+    }
 
     int key_len = strlen(key);
     int text_len = strlen(text);
@@ -141,4 +156,60 @@ char* bit_decrypt(const unsigned char* text) {
     decrypted[len] = '\0'; // pridanie ukončovacieho znaku
     return decrypted;
 }
+
+
+unsigned char* bmp_encrypt(const char* key, const char* text) {
+    if (key == NULL || text == NULL) return NULL;
+
+    // Kontrola, či key obsahuje len znaky abecedy
+    for (int i = 0; key[i] != '\0'; i++) {
+        if (!isalpha(key[i])) {  // Ak znak nie je písmeno abecedy
+            return NULL;  // Vráti NULL, ak kľúč nie je platný
+        }
+    }
+        
+    // 1. Obrátenie reťazca + uppercase
+    char* reversed = reverse(text);
+    if (reversed == NULL) return NULL;
+
+    // 2. Vigenere šifrovanie
+    char* vigenere = vigenere_encrypt(key, reversed);
+    free(reversed);
+    if (vigenere == NULL) return NULL;
+
+    // 3. Bit šifrovanie
+    unsigned char* encrypted = bit_encrypt(vigenere);
+    free(vigenere);
+    if (encrypted == NULL) return NULL;
+
+    return encrypted;
+}
+
+char* bmp_decrypt(const char* key, const unsigned char* text) {
+    if (key == NULL || text == NULL) return NULL;
+
+    // Kontrola, či key obsahuje len znaky abecedy
+    for (int i = 0; key[i] != '\0'; i++) {
+        if (!isalpha(key[i])) {  // Ak znak nie je písmeno abecedy
+            return NULL;  // Vráti NULL, ak kľúč nie je platný
+        }
+    }
+
+    // 1. Bit dešifrovanie
+    char* bit = bit_decrypt(text);
+    if (bit == NULL) return NULL;
+
+    // 2. Vigenere dešifrovanie
+    char* vigenere = vigenere_decrypt(key, bit);
+    free(bit);
+    if (vigenere == NULL) return NULL;
+
+    // 3. Obrátenie reťazca naspäť
+    char* reversed = reverse(vigenere);
+    free(vigenere);
+    if (reversed == NULL) return NULL;
+
+    return reversed;
+}
+
 
